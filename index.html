@@ -229,6 +229,118 @@
             
               
                 
+                <a class="post-title-link" href="/2016/10/26/cocos2dx-3-x场景切换的认识/" itemprop="url">
+                  cocos2dx 3.x场景切换的认识
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-10-26T10:23:23+08:00" content="2016-10-26">
+              2016-10-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ol>
+<li><p>简单的切换场景<br>replaceScene()<br>Director::getInstance()-&gt;replaceScene(MyHelloWorld::createScene());  </p>
+</li>
+<li><p>包含特效的切换场景</p>
+</li>
+</ol>
+<p>Director::getInstance()-&gt;replaceScene(TransitionSlideInT::create(0.3f, MyHelloWorld::createScene()));  </p>
+<p>TransitionSlideInT 也是一个场景类，只不过这个场景包含了子场景，通过create函数就可以创建具备TransitionSlideInT动画特效的场景。<br>类似的游戏特效:<br>TransitionRotoZoom 旋转进入<br>TransitionJumpZoom 原场景缩小弹出，新场景放大弹入<br>TransitionPageTurn 翻页效果进入<br>TransitionRadialCCW 钟摆效果<br>TransitionMoveInL ／ TransitionMoveInR ／ TransitionMoveInT ／ TransitionMoveInB 左侧／右侧／顶部／底部进入<br>TransitionSlideInL／TransitionSlideInR／TransitionSlideInT／TransitionSlideInB 分别从左侧／右侧／顶部／底部滑入<br>TransitionShrinkGrow 交替进入<br>TransitionFlipX／TransitionFlipY x轴翻入（左右）／ y轴翻入（上下）<br>TransitionFlipAngular 左上右下轴翻入<br>TransitionZoomFlipX／TransitionZoomFlipY x轴翻入放大缩小效果（左右）／ y轴翻入放大缩小效果（上下）<br>TransitionFadeTR ／TransitionFadeBL／TransitionFadeUp／TransitionFadeDown 小方格右上角显示进入／ 小方格左下角显示进入／ 横条向上显示进入／ 横条向下显示进入<br>TransitionSplitCols ／ TransitionSplitRows 竖条切换进入／ 横条切换进入<br>TransitionZoomFlipAngular 左上右下轴翻入放大缩小效果<br>TransitionFade 渐隐进入<br>TransitionCrossFade 渐变进入<br>TransitionTurnOffTiles 小方格消失进入<br>TransitionRadialCCW／TransitionRadialCW 扇面展开收起</p>
+<ol>
+<li>推进和弹出场景<br>使用replaceScene 函数进行场景切换，会导致旧场景被释放。如何使新旧同时存在在内存中？现提供推进和弹出那种方式。</li>
+</ol>
+<p>void HelloWorld::menuCloseCallback(Ref* pSender)<br>{  </p>
+<p>#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)<br>    MessageBox(“You pressed the close button. Windows Store Apps do not implement a close button.”,”Alert”);<br>    return;  </p>
+<p>#endif<br>    //Director::getInstance()-&gt;end();<br>    //Director::getInstance()-&gt;replaceScene(MyHelloWorld::createScene());<br>    //Director::getInstance()-&gt;replaceScene(TransitionSlideInT::create(0.3f, MyHelloWorld::createScene()));<br>    Director::getInstance()-&gt;pushScene(MyHelloWorld::createScene());  </p>
+<p>#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)<br>    exit(0);  </p>
+<p>#endif<br>}<br>Director::getInstance()-&gt;pushScene(MyHelloWorld::createScene()); pushScene函数的作用是用新的场景覆盖当前场景，当前场景会被暂停，但不会被释放。</p>
+<p>[html]view plaincopy</p>
+<p>void MyHelloWorld::menuCloseCallback(Ref* pSender){<br>    Director::getInstance()-&gt;popScene();<br>}  </p>
+<p>popScene函数是将新场景释放，恢复旧场景的显示，但是新场景会被释放。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="//schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/10/25/hello-world/" itemprop="url">
                   hello world
                 </a>
@@ -437,7 +549,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">3</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
