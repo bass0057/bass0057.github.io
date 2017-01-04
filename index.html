@@ -285,6 +285,48 @@
 <p>1 使用Map结构,每个键值对为事件名和监听器列表;<br>2 派发事件时,需要把原监听器列表赋值一份,防止某个监听器执行过程中移除监听.</p>
 <p>代码如下</p>
 <hr>
+<p>var CustomEventCenter = cc.Class.extend({</p>
+<pre><code>ctor: function () {
+    this._listenerMap = new Object();
+},
+
+addListener: function (event, callback) {
+    if (!callback || !event)
+        return;
+    var listenerList = this._listenerMap[event];
+    if (!listenerList)
+        listenerList = this._listenerMap[event] = new Array();
+
+    for (var i = 0; i &lt; listenerList.length; i++) {
+        if (listenerList[i] == callback)
+            return;
+    }
+    listenerList.push(callback);
+},
+
+removeListener: function (event, callback) {
+    if (!callback || !event)
+        return;
+    var listenerList = this._listenerMap[event];
+    if (listenerList) {
+        for (var i = 0; i &lt; listenerList.length; i++) {
+            if (listenerList[i] == callback) {
+                listenerList.splice(i, 1);
+                return;
+            }
+        }
+    }
+},
+
+dispatchEvent: function (event, userData) {
+    if (this._listenerMap[event]) {
+        var listeners = this._listenerMap[event].slice();
+        for (var i = 0; i &lt; listeners.length; i++) {
+            listeners[i](userData);
+        }
+    }
+}
+</code></pre><p>});<br>MyEventCenter = new CustomEventCenter();</p>
 
           
         

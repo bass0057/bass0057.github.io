@@ -87,7 +87,9 @@
 <meta name="description" content="其实,如果不考虑冒泡机制和停止机制,自定义事件的实现并不困难.按实际的经验来看,自定义事件并不需要鼠标事件的冒泡机制和停止机制,一般来说只需要增加监听,派发事件和移除监听即可
 实现消息中心,关键点有两个:
 1 使用Map结构,每个键值对为事件名和监听器列表;2 派发事件时,需要把原监听器列表赋值一份,防止某个监听器执行过程中移除监听.
-代码如下">
+代码如下
+
+var CustomEventCenter = c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="自己手动做更贴心的消息中心">
 <meta property="og:url" content="http://bass0057.github.io/2016/11/22/自己手动做更贴心的消息中心/index.html">
@@ -95,14 +97,18 @@
 <meta property="og:description" content="其实,如果不考虑冒泡机制和停止机制,自定义事件的实现并不困难.按实际的经验来看,自定义事件并不需要鼠标事件的冒泡机制和停止机制,一般来说只需要增加监听,派发事件和移除监听即可
 实现消息中心,关键点有两个:
 1 使用Map结构,每个键值对为事件名和监听器列表;2 派发事件时,需要把原监听器列表赋值一份,防止某个监听器执行过程中移除监听.
-代码如下">
-<meta property="og:updated_time" content="2016-11-22T03:56:26.604Z">
+代码如下
+
+var CustomEventCenter = c">
+<meta property="og:updated_time" content="2017-01-04T08:34:18.121Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自己手动做更贴心的消息中心">
 <meta name="twitter:description" content="其实,如果不考虑冒泡机制和停止机制,自定义事件的实现并不困难.按实际的经验来看,自定义事件并不需要鼠标事件的冒泡机制和停止机制,一般来说只需要增加监听,派发事件和移除监听即可
 实现消息中心,关键点有两个:
 1 使用Map结构,每个键值对为事件名和监听器列表;2 派发事件时,需要把原监听器列表赋值一份,防止某个监听器执行过程中移除监听.
-代码如下">
+代码如下
+
+var CustomEventCenter = c">
 
 
 
@@ -288,6 +294,48 @@
 <p>1 使用Map结构,每个键值对为事件名和监听器列表;<br>2 派发事件时,需要把原监听器列表赋值一份,防止某个监听器执行过程中移除监听.</p>
 <p>代码如下</p>
 <hr>
+<p>var CustomEventCenter = cc.Class.extend({</p>
+<pre><code>ctor: function () {
+    this._listenerMap = new Object();
+},
+
+addListener: function (event, callback) {
+    if (!callback || !event)
+        return;
+    var listenerList = this._listenerMap[event];
+    if (!listenerList)
+        listenerList = this._listenerMap[event] = new Array();
+
+    for (var i = 0; i &lt; listenerList.length; i++) {
+        if (listenerList[i] == callback)
+            return;
+    }
+    listenerList.push(callback);
+},
+
+removeListener: function (event, callback) {
+    if (!callback || !event)
+        return;
+    var listenerList = this._listenerMap[event];
+    if (listenerList) {
+        for (var i = 0; i &lt; listenerList.length; i++) {
+            if (listenerList[i] == callback) {
+                listenerList.splice(i, 1);
+                return;
+            }
+        }
+    }
+},
+
+dispatchEvent: function (event, userData) {
+    if (this._listenerMap[event]) {
+        var listeners = this._listenerMap[event].slice();
+        for (var i = 0; i &lt; listeners.length; i++) {
+            listeners[i](userData);
+        }
+    }
+}
+</code></pre><p>});<br>MyEventCenter = new CustomEventCenter();</p>
 
       
     </div>
